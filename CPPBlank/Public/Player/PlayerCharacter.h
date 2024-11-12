@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Components/SphereComponent.h"
 #include "GameFramework/Character.h"
 #include "PlayerCharacter.generated.h"
 
@@ -14,6 +15,7 @@ class UCameraComponent;
 class UInputMappingContext;
 class UInputAction;
 struct FInputActionValue;
+class USphereComponent;
 
 UCLASS()
 class CPPBLANK_API APlayerCharacter : public ACharacter
@@ -21,14 +23,22 @@ class CPPBLANK_API APlayerCharacter : public ACharacter
 	GENERATED_BODY()
 
 public:
+
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
+
+	// Called to bind functionality to input
+
+	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	// Sets default values for this character's properties
 	APlayerCharacter();
 
+	UFUNCTION(BlueprintCallable,Category="Action")
+	virtual void Attack();
+
 
 private:
-	//相机杆
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Camera, meta=(AllowPrivateAccess="true"))
-	TObjectPtr <USpringArmComponent> CameraBoom;
+
 
 
 	// 相机
@@ -46,6 +56,11 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	//InputAction
 	TObjectPtr<UInputAction> LookAction;
+
+
+	UPROPERTY(EditDefaultsOnly, Category = "Input")
+	//InputAction
+	TObjectPtr<UInputAction> AttackAction;
 
 
 
@@ -73,11 +88,15 @@ protected:
 
 	void Move(const FInputActionValue& Value);
 
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
 
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	//相机杆
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	TObjectPtr <USpringArmComponent> CameraBoom;
+
+
+	//演示如何组合  实际上就是在我们当前组件获取 然后设置值来访问
+	UPROPERTY(EditAnywhere,BlueprintReadOnly, Category = "Sphere", meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<USphereComponent> SphereComponent;
+
 
 };

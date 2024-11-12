@@ -8,6 +8,9 @@
 #include <EnhancedInputComponent.h>
 #include "GameFramework/CharacterMovementComponent.h"
 
+#include "Components/SphereComponent.h"
+
+
 // Sets default values 这里是构造函数 做一些默认的操作
 APlayerCharacter::APlayerCharacter()
 {
@@ -51,20 +54,32 @@ APlayerCharacter::APlayerCharacter()
 	// 角色面向我们前进的方向
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	GetCharacterMovement()->RotationRate = FRotator(0.f, 400.f, 0);
+
+
+
+	SphereComponent = CreateDefaultSubobject<USphereComponent>("Sphere Collision");
+
+	SphereComponent	-> SetSphereRadius(100.f);
 	
 	// Get
 	//PlayerCamera->SetupAttachment(GetMesh(), FName("RootSocket"));
 
 	
 
-
+	UE_LOG(LogTemp, Warning, TEXT("constructor init"))
 	  
+}
+
+void APlayerCharacter::Attack()
+{
+	 UE_LOG(LogTemp, Warning, TEXT("Attack"));
 }
 
 // Called when the game starts or when spawned
 void APlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+	UE_LOG(LogTemp, Warning, TEXT("beginPlay init"))
 
 	
 	//开辟指针类型为ULocalPlayer的Player 变量 并做一个三元表达式 进行判断 并且保证变量作用域存在在 if 块内
@@ -163,6 +178,9 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this,  &APlayerCharacter::Look);
 
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this,  &APlayerCharacter::Move);
+
+		EnhancedInputComponent->BindAction(AttackAction, ETriggerEvent::Triggered, this, &APlayerCharacter::Attack);
+
 
 
 	}
